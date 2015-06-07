@@ -4,9 +4,17 @@ var express = require("express"),
     bodyParser = require("body-parser");
 
 //Use Mongoose to connect to MongoDB database
-var db = mongoose.connect("mongodb://localhost/bookAPI", function(err) {
-  if (err) { console.log(err); }
-});
+var db;
+
+if(process.env.ENV === "Test") {
+  db = mongoose.connect("mongodb://localhost/bookAPI_test", function(err) {
+    if (err) { console.log(err); }
+  });
+} else {
+  db = mongoose.connect("mongodb://localhost/bookAPI", function(err) {
+    if (err) { console.log(err); }
+  });
+}
 
 // Create Mongoose model for the docs it reads from MongoDB
 var Book = require("./models/bookModel");
@@ -37,3 +45,5 @@ app.get("/", function(req, res) {
 app.listen(port, function() {
   console.log("Gulp is running my app on port: " + port);
 });
+
+module.exports = app;
